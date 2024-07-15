@@ -47,7 +47,7 @@ This folder contains the server and client both directory. You have to open and 
 
 1. **Project Initialization:**
    - <strike>Initialize React.js project.</strike>
-   - Set up Context API for state management.
+   - <strike>Set up Context API for state management.</strike>
 
 2. **User Registration and Login:**
    - Create registration and login forms for User.
