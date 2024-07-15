@@ -7,8 +7,28 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#ff6500',
+        secondary: '#fecc00',
+      },
+    },
   },
-  plugins: [daisyui],
+  plugins: [
+    daisyui,
+  ],
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          'primary': '#ff6500',
+          'primary-focus': '#e55b00',
+          'primary-content': '#ffffff',
+          'secondary': '#fecc00',
+          'secondary-focus': '#e6b800',
+          'secondary-content': '#ffffff',
+        },
+      },
+    ],
+  },
 }
-
