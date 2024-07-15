@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ==========================
+        typography
+========================== */
+
+.titlePrimary{
+    font: 700 2.5rem 'Poppins', sans-serif;
+    margin: 1rem 0;
+    color: #ff6500;
+}
