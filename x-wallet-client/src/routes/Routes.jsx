@@ -10,7 +10,7 @@ import SignInAgent from "../pages/SignIn/SignInAgent";
 
 const Routes = createBrowserRouter([
     {
-        path: "/",
+        path: "/dashboard",
         element: <PrivateRoute><App /></PrivateRoute>,
     },
     {
