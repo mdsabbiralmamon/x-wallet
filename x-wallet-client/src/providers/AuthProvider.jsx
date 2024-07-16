@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 export const AuthContext = createContext(null);
 
@@ -16,7 +17,12 @@ const AuthProvider = ({ children }) => {
     fetchUserData();
   }, []);
 
-  const authInfo = { user, loading };
+  // signIn user
+  const signIn =(identifier, pin) => {
+    return axios.post("http://localhost:5000/api/auth/login", { identifier, pin })
+  }
+
+  const authInfo = { user, loading, signIn };
 
   return (
     <AuthContext.Provider value={authInfo}>
