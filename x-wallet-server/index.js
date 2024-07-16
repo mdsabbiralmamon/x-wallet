@@ -78,6 +78,47 @@ async function run() {
       }
     });
 
+    // Login Related API Calls
+    app.post("/api/auth/login", async (req, res) => {
+      // Extract the user details from the request body
+      const { identifier, pin } = req.body;
+      console.log('Identifier:', identifier, 'PIN:', pin);
+    
+      try {
+        // Check if a user with the given email or phone number exists
+        const user = await userCollection.findOne({
+          $or: [{ email: identifier }, { phone: identifier }],
+        });
+        console.log('User:', user);
+    
+        if (!user) {
+          return res.status(404).json({
+            error: 'User not found',
+            message: 'User not found',
+          });
+        }
+    
+        // Compare the hashed password
+        const isPasswordValid = await bcrypt.compare(pin, user.pin);
+    
+        if (!isPasswordValid) {
+          return res.status(401).json({
+            error: 'Invalid PIN',
+            message: 'Invalid PIN',
+          });
+        }
+    
+        // Return success response
+        res.status(200).json({
+          message: 'User logged in successfully',
+          user,
+        });
+      } catch (error) {
+        console.error('Error logging in user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
