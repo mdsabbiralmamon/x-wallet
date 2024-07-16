@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion } = require("mongodb");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const app = express();
@@ -29,6 +30,53 @@ async function run() {
   try {
     // User collection
     const userCollection = client.db("xWalletDB").collection("users");
+
+    // Signup Related API Calls
+    app.post("/api/auth/register", async (req, res) => {
+      // Extract the user details from the request body
+      const { name, mobile, email, pin, account, role } = req.body;
+
+      try {
+        // Check if a user with the given email or phone number already exists
+        const existingUser = await userCollection.findOne({
+          $or: [{ email }, { phone: mobile }],
+        });
+
+        if (existingUser) {
+          return res.status(400).json({
+            error: 'A user with this email or phone number already exists',
+            message: 'Email or phone number already exists',
+          });
+        }
+
+        // Hash the PIN
+        const hashedPassword = await bcrypt.hash(pin, 13);
+        console.log('Hashed password', hashedPassword);
+
+        const newUser = {
+          name,
+          email,
+          phone: mobile,
+          accountType: account,
+          userRole: role,
+          pin: hashedPassword,
+          status: 'pending', // Initial status is pending
+          balance: account === 'user' ? 40 : 10000, // Initial balance based on role
+        };
+
+        // Insert the new user into the database
+        const result = await userCollection.insertOne(newUser);
+
+        // Return success response
+        res.status(201).json({
+          message: 'User registered successfully',
+          userId: result.insertedId,
+        });
+      } catch (error) {
+        console.error('Error registering user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
