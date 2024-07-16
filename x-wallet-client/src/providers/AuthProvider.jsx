@@ -9,26 +9,55 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      setUser({ email: "", password: "" });
+    // Function to check if user is already authenticated
+    const checkAuth = async () => {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        try {
+          const response = await axios.get("http://localhost:5000/api/auth/user", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUser(response.data.user);
+        } catch (error) {
+          console.error("Failed to verify token", error);
+          localStorage.removeItem("authToken");
+        }
+      }
       setLoading(false);
     };
 
-    fetchUserData();
+    checkAuth();
   }, []);
 
-  // signIn user
-  const signIn =(identifier, pin) => {
-    return axios.post("http://localhost:5000/api/auth/login", { identifier, pin })
-  }
+  // Function to handle user sign-in
+  const signIn = async (identifier, pin) => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/login", { identifier, pin });
+      const { token, user } = response.data;
 
-  const authInfo = { user, loading, signIn };
+      // Store the token in localStorage
+      localStorage.setItem("authToken", token);
 
-  return (
-    <AuthContext.Provider value={authInfo}>
-      {children}
-    </AuthContext.Provider>
-  );
+      // Set the user state
+      setUser(user);
+
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.message || "Login failed");
+    }
+  };
+
+  // Function to handle user sign-out
+  const signOut = () => {
+    localStorage.removeItem("authToken");
+    setUser(null);
+  };
+
+  const authInfo = { user, loading, signIn, signOut };
+
+  return <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>;
 };
 
 AuthProvider.propTypes = {
