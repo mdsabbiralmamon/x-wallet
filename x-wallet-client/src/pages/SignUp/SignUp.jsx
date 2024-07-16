@@ -35,6 +35,7 @@ const SignUp = () => {
       <div>
         <img className="w-64 mx-auto" src={logo} alt="logo X" />
         <h2 className="text-center titlePrimary">Sign Up</h2>
+        <p className="text-primary font-bold text-center my-4">Already have an account? <a href="/signin" className="underline text-secondary cursor-pointer">Sign In</a> now.</p>
         <form onSubmit={handleSubmit}>
           {/* Name */}
           <div>
