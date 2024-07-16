@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import logo from "../../assets/images/logo.png";
 
 const SignUpUser = () => {
@@ -7,8 +8,11 @@ const SignUpUser = () => {
     mobile: "",
     email: "",
     pin: "",
+    account: "user", // Setting default account type to 'user'
+    role: "user", // Setting default role to 'user'
   });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -17,15 +21,17 @@ const SignUpUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     if (input.pin.length !== 5 || isNaN(input.pin)) {
       setError("PIN must be a 5-digit number.");
       return;
     }
     try {
-      // const response = await axios.post("/api/auth/register", input);
-      console.log(input);
+      const response = await axios.post("http://localhost:5000/api/auth/register", input);
+      setSuccess("Registration successful. Please wait for admin approval.");
+      console.log(response.data);
     } catch (error) {
-      setError("Registration failed. Please try again.");
+      setError(error.response.data.message ? error.response.data.message : "Registration failed. Please try again.");
     }
   };
 
@@ -89,6 +95,7 @@ const SignUpUser = () => {
             />
           </div>
           {error && <p className="text-red-500 font-bold">{error}</p>}
+          {success && <p className="text-green-500 font-bold">{success}</p>}
           <button className="btn btn-primary w-full my-2" type="submit">Sign Up</button>
         </form>
       </div>
