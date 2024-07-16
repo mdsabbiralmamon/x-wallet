@@ -1,5 +1,4 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import App from "../App";
 import PrivateRoute from "./PrivateRoute";
 import SignUpUser from "../pages/SignUp/SignUpUser";
 import SignUpAgent from "../pages/SignUp/SignUpAgent";
