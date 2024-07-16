@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const app = express();
@@ -31,6 +32,40 @@ async function run() {
     // User collection
     const userCollection = client.db("xWalletDB").collection("users");
 
+    // user API calls
+    app.get("/api/auth/user", async (req, res) => {
+      const token = req.headers.authorization?.split(" ")[1];
+
+      if (!token) {
+        return res
+          .status(401)
+          .json({ error: "Unauthorized", message: "No token provided" });
+      }
+
+      try {
+
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        const user = await userCollection.findOne({
+          _id: new ObjectId(decoded.id),
+        });
+
+        if (!user) {
+          return res
+            .status(404)
+            .json({
+              error: "User not found",
+              message: "User associated with token not found",
+            });
+        }
+
+        res.status(200).json({ user });
+      } catch (error) {
+        console.error("Failed to verify token:", error);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    });
+
     // Signup Related API Calls
     app.post("/api/auth/register", async (req, res) => {
       // Extract the user details from the request body
@@ -44,14 +79,14 @@ async function run() {
 
         if (existingUser) {
           return res.status(400).json({
-            error: 'A user with this email or phone number already exists',
-            message: 'Email or phone number already exists',
+            error: "A user with this email or phone number already exists",
+            message: "Email or phone number already exists",
           });
         }
 
         // Hash the PIN
         const hashedPassword = await bcrypt.hash(pin, 13);
-        console.log('Hashed password', hashedPassword);
+        console.log("Hashed password", hashedPassword);
 
         const newUser = {
           name,
@@ -60,8 +95,8 @@ async function run() {
           accountType: account,
           userRole: role,
           pin: hashedPassword,
-          status: 'pending', // Initial status is pending
-          balance: account === 'user' ? 40 : 10000, // Initial balance based on role
+          status: "pending", // Initial status is pending
+          balance: account === "user" ? 40 : 10000, // Initial balance based on role
         };
 
         // Insert the new user into the database
@@ -69,53 +104,59 @@ async function run() {
 
         // Return success response
         res.status(201).json({
-          message: 'User registered successfully',
+          message: "User registered successfully",
           userId: result.insertedId,
         });
       } catch (error) {
-        console.error('Error registering user:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error registering user:", error);
+        res.status(500).json({ error: "Internal server error" });
       }
     });
 
     // Login Related API Calls
     app.post("/api/auth/login", async (req, res) => {
-      // Extract the user details from the request body
       const { identifier, pin } = req.body;
-      console.log('Identifier:', identifier, 'PIN:', pin);
-    
+      console.log("Identifier:", identifier, "PIN:", pin);
+
       try {
-        // Check if a user with the given email or phone number exists
         const user = await userCollection.findOne({
           $or: [{ email: identifier }, { phone: identifier }],
         });
-        console.log('User:', user);
-    
+        console.log("User:", user);
+
         if (!user) {
           return res.status(404).json({
-            error: 'User not found',
-            message: 'User not found',
+            error: "User not found",
+            message: "User not found",
           });
         }
-    
-        // Compare the hashed password
+
         const isPasswordValid = await bcrypt.compare(pin, user.pin);
-    
+
         if (!isPasswordValid) {
           return res.status(401).json({
-            error: 'Invalid PIN',
-            message: 'Invalid PIN',
+            error: "Invalid PIN",
+            message: "Invalid PIN",
           });
         }
-    
-        // Return success response
+
+        // Generate JWT
+        const token = jwt.sign(
+          { id: user._id },
+          process.env.ACCESS_TOKEN_SECRET,
+          {
+            expiresIn: "1h", // Token expires in 1 hour
+          }
+        );
+
         res.status(200).json({
-          message: 'User logged in successfully',
+          message: "User logged in successfully",
+          token,
           user,
         });
       } catch (error) {
-        console.error('Error logging in user:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error logging in user:", error);
+        res.status(500).json({ error: "Internal server error" });
       }
     });
 
@@ -131,14 +172,12 @@ async function run() {
 }
 run().catch(console.dir);
 
-
 // routes
 app.get("/", (req, res) => {
-    res.send("X Wallet server is running");
-  });
-  
-  // listening port
-  app.listen(port, () => {
-    console.log("X Wallet server is listening on port " + port);
-  });
-  
+  res.send("X Wallet server is running");
+});
+
+// listening port
+app.listen(port, () => {
+  console.log("X Wallet server is listening on port " + port);
+});
