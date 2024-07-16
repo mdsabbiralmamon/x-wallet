@@ -55,8 +55,8 @@ This folder contains the server and client both directory. You have to open and 
 
 
 3. **Agent Registration and Login:**
-   - Create registration and login forms for Agent.
-   - Implement form validation.
+   -  <strike>Create registration and login forms for Agent.</strike>
+   -  <strike>Implement form validation.</strike>
 
 4. **Admin Login:**
    - Create login form for Admin.
