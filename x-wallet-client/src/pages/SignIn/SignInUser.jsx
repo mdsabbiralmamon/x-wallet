@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import logo from "../../assets/images/logo.png";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const SignInUser = () => {
   const [input, setInput] = useState({ identifier: "", pin: "" });
   const [error, setError] = useState("");
+  const {signIn} = useContext(AuthContext);
 
   const handleChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -13,8 +15,11 @@ const SignInUser = () => {
     e.preventDefault();
     setError("");
     try {
-      // const response = await axios.post("/api/auth/login", input);
-      console.log(input);
+      signIn(input.identifier, input.pin)
+        .then((response) => {
+          console.log(response.data);
+        })
+        console.log(input);
     } catch (error) {
       setError("Invalid credentials. Please try again.");
     }
