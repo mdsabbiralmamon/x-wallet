@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "../App";
 import PrivateRoute from "./PrivateRoute";
 import SignUpUser from "../pages/SignUp/SignUpUser";
@@ -7,11 +7,16 @@ import InitialSignIn from "../pages/SignIn/InitialSignIn";
 import InitialSignUp from "../pages/SignUp/InitialSignUp";
 import SignInUser from "../pages/SignIn/SignInUser";
 import SignInAgent from "../pages/SignIn/SignInAgent";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 const Routes = createBrowserRouter([
     {
+        path: "/",
+        element: <PrivateRoute><Navigate to="/dashboard" replace /></PrivateRoute>,
+    },
+    {
         path: "/dashboard",
-        element: <PrivateRoute><App /></PrivateRoute>,
+        element: <PrivateRoute><Dashboard /></PrivateRoute>,
     },
     {
         path: "/signin",
