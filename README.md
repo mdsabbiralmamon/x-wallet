@@ -50,8 +50,8 @@ This folder contains the server and client both directory. You have to open and 
    - <strike>Set up Context API for state management.</strike>
 
 2. **User Registration and Login:**
-   - Create registration and login forms for User.
-   - Implement form validation.
+   - <strike>Create registration and login forms for User.</strike>
+   - <strike>Implement form validation.</strike>
 
 
 3. **Agent Registration and Login:**
