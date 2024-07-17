@@ -1,11 +1,17 @@
 import { useContext, useState } from "react";
 import logo from "../../assets/images/logo.png";
 import { AuthContext } from "../../providers/AuthProvider";
+import { useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const SignInUser = () => {
   const [input, setInput] = useState({ identifier: "", pin: "" });
   const [error, setError] = useState("");
   const { signIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   const handleChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -17,8 +23,19 @@ const SignInUser = () => {
     try {
       const response = await signIn(input.identifier, input.pin);
       console.log("Logged in successfully", response);
+      Swal.fire({
+        icon: 'success',
+        title: 'Logged in successfully',
+        text: 'Welcome back!',
+      });
+      // Navigate to where they came from
+      navigate(from, { replace: true });
     } catch (error) {
-      setError("Invalid credentials. Please try again.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: 'Invalid credentials. Please try again.',
+      });
     }
   };
 
@@ -26,7 +43,7 @@ const SignInUser = () => {
     <div className="h-screen flex justify-center items-center">
       <div>
         <img className="w-64 mx-auto" src={logo} alt="logo X" />
-        <h2 className="text-center titlePrimary">Sign In as User</h2>
+        <h2 className="text-center titlePrimary">Sign In</h2>
         <p className="text-center text-primary my-4">
           Not have an account?{" "}
           <a href="/signup" className="text-bold text-secondary underline">
