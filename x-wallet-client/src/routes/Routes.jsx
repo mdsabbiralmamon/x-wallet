@@ -5,7 +5,6 @@ import SignUpAgent from "../pages/SignUp/SignUpAgent";
 import InitialSignIn from "../pages/SignIn/InitialSignIn";
 import InitialSignUp from "../pages/SignUp/InitialSignUp";
 import SignInUser from "../pages/SignIn/SignInUser";
-import SignInAgent from "../pages/SignIn/SignInAgent";
 import Dashboard from "../pages/Dashboard/Dashboard";
 
 const Routes = createBrowserRouter([
@@ -24,10 +23,6 @@ const Routes = createBrowserRouter([
     {
         path: "/signin/user",
         element: <SignInUser />,
-    },
-    {
-        path: "/signin/agent",
-        element: <SignInAgent />,
     },
     {
         path: "/signup",
