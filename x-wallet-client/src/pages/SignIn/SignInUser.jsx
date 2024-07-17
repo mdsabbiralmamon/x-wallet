@@ -31,10 +31,11 @@ const SignInUser = () => {
       // Navigate to where they came from
       navigate(from, { replace: true });
     } catch (error) {
+      // console.log("Error logging in", error.message);
       Swal.fire({
         icon: 'error',
         title: 'Login Failed',
-        text: 'Invalid credentials. Please try again.',
+        text: error.message,
       });
     }
   };
