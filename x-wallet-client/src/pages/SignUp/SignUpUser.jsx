@@ -34,6 +34,16 @@ const SignUpUser = () => {
       });
       return;
     }
+
+    if (input.mobile.length !== 11 || isNaN(input.pin)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Number',
+        text: 'Number must be a 11-digit number (use without +88).',
+      });
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:5000/api/auth/register", input);
       Swal.fire({
@@ -44,6 +54,7 @@ const SignUpUser = () => {
       console.log(response.data);
       navigate("/signin");
     } catch (error) {
+      // console.log("Error registering", error.response.data.message);
       Swal.fire({
         icon: 'error',
         title: 'Registration Failed',
@@ -77,7 +88,7 @@ const SignUpUser = () => {
             <label htmlFor="mobile" className="font-bold text-primary">Mobile Number:</label>
             <input
               className="input input-bordered w-full my-2 border-primary focus:border-primary focus:outline-primary"
-              type="text"
+              type="number"
               id="mobile"
               name="mobile"
               value={input.mobile}
