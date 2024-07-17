@@ -34,6 +34,16 @@ const SignUpAgent = () => {
       });
       return;
     }
+
+    if (input.mobile.length !== 11 || isNaN(input.pin)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Number',
+        text: 'Number must be a 11-digit number (use without +88).',
+      });
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:5000/api/auth/register", input);
       Swal.fire({
