@@ -2,7 +2,8 @@ import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 
 const Dashboard = () => {
-    const {signOut} = useContext(AuthContext);
+    const {signOut, user} = useContext(AuthContext);
+    console.log('user data', user);
     return (
         <div>
             <h2>dashboard</h2>
