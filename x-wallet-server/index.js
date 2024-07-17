@@ -131,6 +131,13 @@ async function run() {
           });
         }
 
+        if (user.status === 'pending') {
+          return res.status(403).json({
+            error: 'Account pending',
+            message: 'Your account is still pending approval.',
+          });
+        }
+
         const isPasswordValid = await bcrypt.compare(pin, user.pin);
 
         if (!isPasswordValid) {
