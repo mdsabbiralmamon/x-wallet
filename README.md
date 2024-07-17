@@ -59,8 +59,8 @@ This folder contains the server and client both directory. You have to open and 
    -  <strike>Implement form validation.</strike>
 
 4. **Admin Login:**
-   - Create login form for Admin.
-   - Implement form validation.
+   - <strike>Create login form for Admin.</strike>
+   - <strike>Implement form validation.</strike>
 
 
 5. **User Dashboard:**
