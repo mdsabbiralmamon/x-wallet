@@ -1,8 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 import logo from "../../assets/images/logo.png";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const SignUpAgent = () => {
+  const navigate = useNavigate();
+
   const [input, setInput] = useState({
     name: "",
     mobile: "",
@@ -20,18 +24,31 @@ const SignUpAgent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setSuccess("");
+    setError("");
     if (input.pin.length !== 5 || isNaN(input.pin)) {
-      setError("PIN must be a 5-digit number.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid PIN',
+        text: 'PIN must be a 5-digit number.',
+      });
       return;
     }
     try {
       const response = await axios.post("http://localhost:5000/api/auth/register", input);
-      setSuccess("Registration successful. Please wait for admin approval.");
+      Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful',
+        text: 'Please wait sign in.',
+      });
       console.log(response.data);
+      navigate("/signin");
     } catch (error) {
-      setError(error.response.data.message ? error.response.data.message : "Registration failed. Please try again.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: error.response.data.message ? error.response.data.message : "Registration failed. Please try again.",
+      });
     }
   };
 
