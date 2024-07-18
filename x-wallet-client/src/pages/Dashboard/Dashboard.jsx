@@ -3,9 +3,30 @@ import { AuthContext } from "../../providers/AuthProvider";
 import { IoIosLogOut, IoIosSend } from "react-icons/io";
 import { FaWallet, FaQuestion, FaDollarSign, FaArrowRightArrowLeft, FaArrowsRotate } from "react-icons/fa6";
 import QRCode from "react-qr-code";
+import Swal from 'sweetalert2'
 
 const Dashboard = () => {
     const { signOut, user } = useContext(AuthContext);
+    const handleLogout = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Logout"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire({
+                title: "Logged Out!",
+                text: "Logout Successful!!! Please Log in again.",
+                icon: "success"
+              });
+              signOut();
+            }
+          });
+    };
     // console.log('user data', user);
     const icon = user.name.charAt(0).toUpperCase() + user.name.charAt(1).toUpperCase();
     return (
@@ -23,7 +44,7 @@ const Dashboard = () => {
                         <h3 className="text-xl font-bold">Welcome Back</h3>
                     </div>
                 </div>
-                <button onClick={signOut} className="btn rounded-full w-20 border-gray-400 hover:border-primary">
+                <button onClick={handleLogout} className="btn rounded-full w-20 border-gray-400 hover:border-primary">
                     <IoIosLogOut className="text-xl text-primary" />
                 </button>
             </div>
@@ -41,26 +62,26 @@ const Dashboard = () => {
                             </div>
                         </div>
                         <div>
-                            <div className="flex justify-evenly items-center gap-8">
+                            <div className="flex justify-between items-center gap-4 md:gap-8">
                                 <div className="flex flex-col justify-center items-center gap-2">
-                                    <button className="btn rounded-full w-20 h-20 mt-4 border-2"><FaDollarSign className="text-5xl" /></button>
-                                    <h2 className="text-xl">Balance</h2>
+                                    <button className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaDollarSign className="text-xl md:text-5xl" /></button>
+                                    <h2 className="text-sm md:text-xl">Balance</h2>
                                 </div>
                                 <div className="flex flex-col justify-center items-center gap-2">
-                                    <button className="btn rounded-full w-20 h-20 mt-4 border-2"><IoIosSend className="text-5xl" /></button>
-                                    <h2 className="text-xl">Send</h2>
+                                    <button className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><IoIosSend className="text-xl md:text-5xl" /></button>
+                                    <h2 className="text-sm md:text-xl">Send</h2>
                                 </div>
                                 <div className="flex flex-col justify-center items-center gap-2">
-                                    <button className="btn rounded-full w-20 h-20 mt-4 border-2"><FaQuestion className="text-5xl" /></button>
-                                    <h2 className="text-xl">Request</h2>
+                                    <button className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaQuestion className="text-xl md:text-5xl" /></button>
+                                    <h2 className="text-sm md:text-xl">Request</h2>
                                 </div>
                                 <div className="flex flex-col justify-center items-center gap-2">
-                                    <button className="btn rounded-full w-20 h-20 mt-4 border-2"><FaArrowRightArrowLeft className="text-5xl" /></button>
-                                    <h2 className="text-xl">Transfer</h2>
+                                    <button className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaArrowRightArrowLeft className="text-xl md:text-5xl" /></button>
+                                    <h2 className="text-sm md:text-xl">Transfer</h2>
                                 </div>
                                 <div className="flex flex-col justify-center items-center gap-2">
-                                    <button className="btn rounded-full w-20 h-20 mt-4 border-2"><FaArrowsRotate className="text-5xl" /></button>
-                                    <h2 className="text-xl">History</h2>
+                                    <button className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaArrowsRotate className="text-xl md:text-5xl" /></button>
+                                    <h2 className="text-sm md:text-xl">History</h2>
                                 </div>
                             </div>
                         </div>
