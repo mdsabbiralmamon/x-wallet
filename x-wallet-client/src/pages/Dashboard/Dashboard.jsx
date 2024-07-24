@@ -1,7 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 import { IoIosLogOut, IoIosSend } from "react-icons/io";
-import { FaWallet, FaQuestion, FaDollarSign, FaArrowRightArrowLeft, FaArrowsRotate } from "react-icons/fa6";
+import { IoReceiptOutline } from "react-icons/io5";
+import { FaWallet, FaQuestion, FaDollarSign, FaArrowRightArrowLeft, FaArrowsRotate, FaTicket, FaMoneyBill, FaShare } from "react-icons/fa6";
+import { FaClock } from "react-icons/fa";
+import { HiLightBulb } from "react-icons/hi";
+import { PiBankFill } from "react-icons/pi";
+import { MdOutlineReceipt } from "react-icons/md";
 import QRCode from "react-qr-code";
 import Swal from 'sweetalert2'
 
@@ -16,16 +21,16 @@ const Dashboard = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Logout"
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-              Swal.fire({
-                title: "Logged Out!",
-                text: "Logout Successful!!! Please Log in again.",
-                icon: "success"
-              });
-              signOut();
+                Swal.fire({
+                    title: "Logged Out!",
+                    text: "Logout Successful!!! Please Log in again.",
+                    icon: "success"
+                });
+                signOut();
             }
-          });
+        });
     };
     // console.log('user data', user);
     const icon = user.name.charAt(0).toUpperCase() + user.name.charAt(1).toUpperCase();
@@ -89,7 +94,65 @@ const Dashboard = () => {
                 </div>
                 {/* Other Services */}
                 <div>
-                    
+                    <div className="container mx-auto p-4 bg-white rounded-lg shadow-md">
+                        <h2 className="text-md text-primary font-bold">Other Services</h2>
+                        <div>
+                            <div className="flex justify-between items-center my-2 text-nowrap w-full">
+                                <div className="flex flex-col justify-center items-center gap-2 w-full">
+                                    <div className="flex justify-center items-center flex-col gap-2 w-full">
+                                        <button className="inline-flex justify-center items-center cursor-pointer rounded-xl border-orange-300 bg-orange-200 w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><MdOutlineReceipt className="text-xl text-orange-400 md:text-5xl" /></button>
+                                        <h2 className="text-sm md:text-xl">Create Invoice</h2>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col justify-center items-center gap-2 w-full">
+                                    <div className="flex justify-center items-center flex-col gap-2 w-full">
+                                        <button className="inline-flex justify-center items-center cursor-pointer rounded-xl border-blue-300 bg-blue-200 w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><IoReceiptOutline className="text-xl text-blue-400 md:text-5xl" /></button>
+                                        <h2 className="text-sm md:text-xl">Pay Bills</h2>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col justify-center items-center gap-2 w-full">
+                                    <div className="flex justify-center items-center flex-col gap-2 w-full">
+                                        <button className="inline-flex justify-center items-center cursor-pointer rounded-xl border-yellow-300 bg-yellow-200 w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><PiBankFill className="text-xl text-yellow-400 md:text-5xl" /></button>
+                                        <h2 className="text-sm md:text-xl">Bank Transfer</h2>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col justify-center items-center gap-2 w-full">
+                                    <div className="flex justify-center items-center flex-col gap-2 w-full">
+                                        <button className="inline-flex justify-center items-center cursor-pointer rounded-xl border-green-300 bg-green-200 w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaClock className="text-xl text-green-400 md:text-5xl" /></button>
+                                        <h2 className="text-sm md:text-xl">Savings</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="flex justify-between items-center text-nowrap">
+                                <div className="flex flex-col justify-center items-center gap-2 w-full">
+                                    <div className="flex justify-center items-center flex-col gap-2 w-full">
+                                        <button className="inline-flex justify-center items-center cursor-pointer rounded-xl border-red-300 bg-red-200 w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><HiLightBulb className="text-xl text-red-400 md:text-5xl" /></button>
+                                        <h2 className="text-sm md:text-xl">Electricity</h2>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col justify-center items-center gap-2 w-full">
+                                    <div className="flex justify-center items-center flex-col gap-2 w-full">
+                                        <button className="inline-flex justify-center items-center cursor-pointer rounded-xl border-violet-300 bg-violet-200 w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaTicket className="text-xl text-violet-400 md:text-5xl" /></button>
+                                        <h2 className="text-sm md:text-xl">Tickets</h2>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col justify-center items-center gap-2 w-full">
+                                    <div className="flex justify-center items-center flex-col gap-2 w-full">
+                                        <button className="inline-flex justify-center items-center cursor-pointer rounded-xl border-sky-300 bg-sky-200 w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaMoneyBill className="text-xl text-sky-400 md:text-5xl" /></button>
+                                        <h2 className="text-sm md:text-xl">Add Money</h2>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col justify-center items-center gap-2 w-full">
+                                    <div className="flex justify-center items-center flex-col gap-2 w-full">
+                                        <button className="inline-flex justify-center items-center cursor-pointer rounded-xl border-yellow-300 bg-yellow-200 w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaShare className="text-xl text-yellow-400 md:text-5xl" /></button>
+                                        <h2 className="text-sm md:text-xl">Share</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
