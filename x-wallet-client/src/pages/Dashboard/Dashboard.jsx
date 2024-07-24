@@ -51,8 +51,8 @@ const Dashboard = () => {
             {/* balance dashboard */}
             <div>
                 <div className="container mx-auto py-4">
-                    <div className="bg-primary text-white p-4 rounded-lg">
-                        <div className="flex justify-between">
+                    <div className="bg-primary text-white p-4 my-4 rounded-lg shadow-md">
+                        <div className="flex justify-between my-4">
                             <div>
                                 <h3 className="text-sm inline-flex gap-2 justify-center items-center"><FaWallet />Your Wallet Balance</h3>
                                 <h2 className="text-3xl font-bold">{user.balance}.00 TK</h2>
@@ -61,7 +61,7 @@ const Dashboard = () => {
                                 <QRCode fgColor='white' bgColor="transparent" value={`${user.phone}`} size={50} />
                             </div>
                         </div>
-                        <div>
+                        <div className="my-4">
                             <div className="flex justify-between items-center gap-4 md:gap-8">
                                 <div className="flex flex-col justify-center items-center gap-2">
                                     <button className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaDollarSign className="text-xl md:text-5xl" /></button>
@@ -87,7 +87,10 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>
-
+                {/* Other Services */}
+                <div>
+                    
+                </div>
             </div>
         </div>
     );
