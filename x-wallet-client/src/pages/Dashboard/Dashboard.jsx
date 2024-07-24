@@ -155,6 +155,78 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+            {/* Recent Activity */}
+            <div className="container mx-auto">
+                <div>
+                    <div className="flex justify-between my-6 items-center">
+                        <h2 className="text-xl font-bold text-primary">Recent Activity</h2>
+                        <h3 className="font-semibold text-secondary cursor-pointer">See All {">>"}</h3>
+                    </div>
+                    <div className="my-4">
+                        <div className="flex justify-between items-center bg-white p-4 rounded-xl">
+                            <div>
+                                <div className="flex gap-4 items-center">
+                                    <div className="avatar online placeholder">
+                                        <div className="bg-primary text-white w-16 rounded-full">
+                                            <span className="text-xl">A</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h2 className="text-sm font-bold">Amit Kumar</h2>
+                                        <h3 className="text-xs">Send Money</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h2 className="text-sm font-bold text-primary">500.00 TK</h2>
+                                <h3 className="text-xs">12:30 PM</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="my-4">
+                        <div className="flex justify-between items-center bg-white p-4 rounded-xl">
+                            <div>
+                                <div className="flex gap-4 items-center">
+                                    <div className="avatar online placeholder">
+                                        <div className="bg-primary text-white w-16 rounded-full">
+                                            <span className="text-xl">A</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h2 className="text-sm font-bold">Amit Kumar</h2>
+                                        <h3 className="text-xs">Send Money</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h2 className="text-sm font-bold text-primary">500.00 TK</h2>
+                                <h3 className="text-xs">12:30 PM</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="my-4">
+                        <div className="flex justify-between items-center bg-white p-4 rounded-xl">
+                            <div>
+                                <div className="flex gap-4 items-center">
+                                    <div className="avatar online placeholder">
+                                        <div className="bg-primary text-white w-16 rounded-full">
+                                            <span className="text-xl">A</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h2 className="text-sm font-bold">Amit Kumar</h2>
+                                        <h3 className="text-xs">Send Money</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h2 className="text-sm font-bold text-primary">500.00 TK</h2>
+                                <h3 className="text-xs">12:30 PM</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
