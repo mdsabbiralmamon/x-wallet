@@ -40,6 +40,9 @@ async function run() {
   try {
     // User collection
     const userCollection = client.db("xWalletDB").collection("users");
+    const transactionCollection = client
+      .db("xWalletDB")
+      .collection("transactions");
 
     // user API calls
     app.get("/api/auth/user", async (req, res) => {
@@ -52,7 +55,6 @@ async function run() {
       }
 
       try {
-
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
         const user = await userCollection.findOne({
@@ -60,12 +62,10 @@ async function run() {
         });
 
         if (!user) {
-          return res
-            .status(404)
-            .json({
-              error: "User not found",
-              message: "User associated with token not found",
-            });
+          return res.status(404).json({
+            error: "User not found",
+            message: "User associated with token not found",
+          });
         }
 
         res.status(200).json({ user });
@@ -74,6 +74,137 @@ async function run() {
         res.status(500).json({ error: "Internal server error" });
       }
     });
+
+    // transaction API calls
+    app.post("/api/transactions/send", async (req, res) => {
+      const token = req.headers.authorization?.split(" ")[1];
+      const { receiver, amount, pin } = req.body;
+  
+      if (!token) {
+          return res
+              .status(401)
+              .json({ error: "Unauthorized", message: "No token provided" });
+      }
+  
+      try {
+          const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+          const user = await userCollection.findOne({
+              _id: new ObjectId(decoded.id),
+          });
+  
+          if (!user) {
+              return res
+                  .status(404)
+                  .json({
+                      error: "User not found",
+                      message: "User associated with token not found",
+                  });
+          }
+  
+          const receiverUser = await userCollection.findOne({ phone: receiver });
+          if (!receiverUser) {
+              return res
+                  .status(404)
+                  .json({
+                      error: "Receiver not found",
+                      message: "Receiver not found",
+                  });
+          }
+  
+          if (user.phone === receiver) {
+              return res
+                  .status(400)
+                  .json({
+                      error: "Invalid receiver",
+                      message: "You cannot send money to yourself",
+                  });
+          }
+  
+          if (user.balance < amount) {
+              return res
+                  .status(400)
+                  .json({
+                      error: "Insufficient balance",
+                      message: "You do not have enough balance to send this amount",
+                  });
+          }
+  
+          const isPasswordValid = await bcrypt.compare(pin, user.pin);
+          if (!isPasswordValid) {
+              return res.status(401).json({
+                  error: "Invalid PIN",
+                  message: "Invalid PIN",
+              });
+          }
+  
+          if (amount < 50) {
+              return res
+                  .status(400)
+                  .json({
+                      error: "Invalid amount",
+                      message: "Transaction amount must be at least 50 Taka",
+                  });
+          }
+  
+          let fee = 0;
+          if (amount > 100) {
+              fee = 5;
+          }
+  
+          const finalAmount = parseInt(amount) + parseInt(fee);
+  
+          // Start a session and transaction
+          const session = client.startSession();
+          session.startTransaction();
+  
+          try {
+              // transaction logic
+              await transactionCollection.insertOne({
+                  senderPhone: user.phone,
+                  receiverPhone: receiverUser.phone,
+                  amount,
+                  fee,
+                  date: new Date(),
+              }, { session });
+  
+              // Update sender's balance
+              await userCollection.updateOne(
+                  { _id: user._id },
+                  { $inc: { balance: -finalAmount } },
+                  { session }
+              );
+  
+              // Update receiver's balance
+              await userCollection.updateOne(
+                  { _id: receiverUser._id },
+                  { $inc: { balance: parseInt(amount) } },
+                  { session }
+              );
+  
+              // Commit the transaction
+              await session.commitTransaction();
+              session.endSession();
+  
+              console.log(`Sender id: ${user._id} Phone: ${user.phone} sending ${amount} with fee ${fee}`);
+              console.log(`Receiver id: ${receiverUser._id} Phone: ${receiverUser.phone} receiving ${amount}`);
+  
+              res
+                  .status(200)
+                  .json({ success: true, message: "Money sent successfully" });
+          } catch (error) {
+              // Abort the transaction
+              await session.abortTransaction();
+              session.endSession();
+  
+              console.error("Transaction failed:", error);
+              res.status(500).json({ error: "Internal server error", message: "Transaction failed" });
+          }
+      } catch (error) {
+          console.error("Failed to verify token or send money:", error);
+          res.status(500).json({ error: "Internal server error" });
+      }
+  });
+  
 
     // Signup Related API Calls
     app.post("/api/auth/register", async (req, res) => {
@@ -140,10 +271,10 @@ async function run() {
           });
         }
 
-        if (user.status === 'pending') {
+        if (user.status === "pending") {
           return res.status(403).json({
-            error: 'Account pending',
-            message: 'Your account is still pending approval.',
+            error: "Account pending",
+            message: "Your account is still pending approval.",
           });
         }
 
