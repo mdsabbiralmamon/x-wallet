@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 import { IoIosLogOut, IoIosSend } from "react-icons/io";
 import { IoReceiptOutline } from "react-icons/io5";
@@ -9,8 +9,11 @@ import { PiBankFill } from "react-icons/pi";
 import { MdOutlineReceipt } from "react-icons/md";
 import QRCode from "react-qr-code";
 import Swal from 'sweetalert2'
+import SendMoneyModal from "../../components/Shared/Modals/SendMoneyModal";
 
 const Dashboard = () => {
+    const [isModalOpen, setModalOpen] = useState(false);
+
     const { signOut, user } = useContext(AuthContext);
     const handleLogout = () => {
         Swal.fire({
@@ -34,6 +37,16 @@ const Dashboard = () => {
     };
     // console.log('user data', user);
     const icon = user.name.charAt(0).toUpperCase() + user.name.charAt(1).toUpperCase();
+
+    // modal actions
+    const openModal = () => {
+        setModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
+    };
+
     return (
         <div>
             {/* nav bar */}
@@ -73,8 +86,9 @@ const Dashboard = () => {
                                     <h2 className="text-sm md:text-xl">Balance</h2>
                                 </div>
                                 <div className="flex flex-col justify-center items-center gap-2">
-                                    <button className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><IoIosSend className="text-xl md:text-5xl" /></button>
+                                    <button onClick={openModal} className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><IoIosSend className="text-xl md:text-5xl" /></button>
                                     <h2 className="text-sm md:text-xl">Send</h2>
+                                    <SendMoneyModal isOpen={isModalOpen} onClose={closeModal} />
                                 </div>
                                 <div className="flex flex-col justify-center items-center gap-2">
                                     <button className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaQuestion className="text-xl md:text-5xl" /></button>
@@ -156,7 +170,7 @@ const Dashboard = () => {
                 </div>
             </div>
             {/* Recent Activity */}
-            <div className="container mx-auto">
+            <div className="container mx-auto pb-4">
                 <div>
                     <div className="flex justify-between my-6 items-center">
                         <h2 className="text-xl font-bold text-primary">Recent Activity</h2>
