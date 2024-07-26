@@ -78,7 +78,7 @@ async function run() {
     // transaction API calls
     app.post("/api/transactions/send", async (req, res) => {
       const token = req.headers.authorization?.split(" ")[1];
-      const { receiver, amount, pin } = req.body;
+      const { receiver, amount, pin, transactionType } = req.body;
   
       if (!token) {
           return res
@@ -152,6 +152,14 @@ async function run() {
           }
   
           const finalAmount = parseInt(amount) + parseInt(fee);
+          if (user.balance < finalAmount) {
+              return res
+                  .status(400)
+                  .json({
+                      error: "Insufficient balance",
+                      message: "You do not have enough balance to send this amount with fee",
+                  });
+          }
   
           // Start a session and transaction
           const session = client.startSession();
@@ -162,8 +170,9 @@ async function run() {
               await transactionCollection.insertOne({
                   senderPhone: user.phone,
                   receiverPhone: receiverUser.phone,
-                  amount,
+                  amount: parseInt(amount),
                   fee,
+                  transactionType,
                   date: new Date(),
               }, { session });
   
