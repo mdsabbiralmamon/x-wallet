@@ -33,7 +33,7 @@ const SendMoneyModal = ({ isOpen, onClose }) => {
                 try {
                     const response = await axios.post(
                         'http://localhost:5000/api/transactions/send',
-                        { receiver, amount, pin },
+                        { receiver, amount, pin, transactionType: 'Send Money' },
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
