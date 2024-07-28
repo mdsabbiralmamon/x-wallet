@@ -10,9 +10,12 @@ import { MdOutlineReceipt } from "react-icons/md";
 import QRCode from "react-qr-code";
 import Swal from 'sweetalert2'
 import SendMoneyModal from "../../components/Shared/Modals/SendMoneyModal";
+import CashOutModal from "../../components/Shared/Modals/CashOutModal";
 
 const Dashboard = () => {
-    const [isModalOpen, setModalOpen] = useState(false);
+    const [isCashOutModalOpen, setCashOutModalOpen] = useState(false);
+    const [isSendMoneyModalOpen, setSendMoneyModalOpen] = useState(false);
+
 
     const { signOut, user } = useContext(AuthContext);
     const handleLogout = () => {
@@ -39,13 +42,22 @@ const Dashboard = () => {
     const icon = user.name.charAt(0).toUpperCase() + user.name.charAt(1).toUpperCase();
 
     // modal actions
-    const openModal = () => {
-        setModalOpen(true);
+    const openCashOutModal = () => {
+        setCashOutModalOpen(true);
     };
-
-    const closeModal = () => {
-        setModalOpen(false);
+    
+    const closeCashOutModal = () => {
+        setCashOutModalOpen(false);
     };
+    
+    const openSendMoneyModal = () => {
+        setSendMoneyModalOpen(true);
+    };
+    
+    const closeSendMoneyModal = () => {
+        setSendMoneyModalOpen(false);
+    };
+    
 
     return (
         <div>
@@ -60,6 +72,7 @@ const Dashboard = () => {
                     <div>
                         <h2 className="text-sm font-bold">Hello, {user.name}</h2>
                         <h3 className="text-xl font-bold">Welcome Back</h3>
+                        <span className="badge badge-primary badge-outline">{user.accountType}</span>
                     </div>
                 </div>
                 <button onClick={handleLogout} className="btn rounded-full w-20 border-gray-400 hover:border-primary">
@@ -82,13 +95,14 @@ const Dashboard = () => {
                         <div className="my-4">
                             <div className="flex justify-between items-center gap-4 md:gap-8">
                                 <div className="flex flex-col justify-center items-center gap-2">
-                                    <button className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaDollarSign className="text-xl md:text-5xl" /></button>
-                                    <h2 className="text-sm md:text-xl">Balance</h2>
+                                    <button onClick={openCashOutModal} className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaDollarSign className="text-xl md:text-5xl" /></button>
+                                    <h2 className="text-sm md:text-xl">Cash Out</h2>
+                                    <CashOutModal isOpen={isCashOutModalOpen} onClose={closeCashOutModal} />
                                 </div>
                                 <div className="flex flex-col justify-center items-center gap-2">
-                                    <button onClick={openModal} className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><IoIosSend className="text-xl md:text-5xl" /></button>
+                                    <button onClick={openSendMoneyModal} className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><IoIosSend className="text-xl md:text-5xl" /></button>
                                     <h2 className="text-sm md:text-xl">Send</h2>
-                                    <SendMoneyModal isOpen={isModalOpen} onClose={closeModal} />
+                                    <SendMoneyModal isOpen={isSendMoneyModalOpen} onClose={closeSendMoneyModal} />
                                 </div>
                                 <div className="flex flex-col justify-center items-center gap-2">
                                     <button className="inline-flex justify-center items-center cursor-pointer rounded-full w-10 h-10 md:w-20 md:h-20 mt-4 border-2"><FaQuestion className="text-xl md:text-5xl" /></button>
