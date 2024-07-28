@@ -128,6 +128,15 @@ async function run() {
                       message: "You do not have enough balance to send this amount",
                   });
           }
+
+          if(receiverUser.accountType === "agent") {
+            return res
+                .status(400)
+                .json({
+                    error: "Invalid receiver",
+                    message: "You cannot send money to an agent",
+                });
+          };
   
           const isPasswordValid = await bcrypt.compare(pin, user.pin);
           if (!isPasswordValid) {
@@ -194,8 +203,8 @@ async function run() {
               await session.commitTransaction();
               session.endSession();
   
-              console.log(`Sender id: ${user._id} Phone: ${user.phone} sending ${amount} with fee ${fee}`);
-              console.log(`Receiver id: ${receiverUser._id} Phone: ${receiverUser.phone} receiving ${amount}`);
+              // console.log(`Sender id: ${user._id} Phone: ${user.phone} sending ${amount} with fee ${fee}`);
+              // console.log(`Receiver id: ${receiverUser._id} Phone: ${receiverUser.phone} receiving ${amount}`);
   
               res
                   .status(200)
