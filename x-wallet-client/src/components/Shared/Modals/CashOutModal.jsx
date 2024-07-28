@@ -4,24 +4,25 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 const CashOutModal = ({ isOpen, onClose }) => {
+    const [receiver, setReceiver] = useState('');
     const [amount, setAmount] = useState('');
     const [pin, setPin] = useState('');
 
     const handleCashOut = async () => {
         Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
+            title: "Proceed to Cash Out?",
+            text: `Are you sure you want to Cash Out ${amount} Taka to ${receiver}?`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, cash out!"
+            confirmButtonText: "Yes, Cash Out!"
         }).then(async (result) => {
             if (result.isConfirmed) {
                 if (amount < 50) {
                     Swal.fire({
                         title: "Error!",
-                        text: "Cash out amount must be at least 50 Taka.",
+                        text: "Transaction amount must be at least 50 Taka.",
                         icon: "error"
                     });
                     return;
@@ -31,8 +32,8 @@ const CashOutModal = ({ isOpen, onClose }) => {
 
                 try {
                     const response = await axios.post(
-                        'http://localhost:5000/api/transactions/cashout',
-                        { amount, pin },
+                        'http://localhost:5000/api/transactions/cash',
+                        { receiver, amount, pin, transactionType: 'Cash Out' },
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
@@ -43,19 +44,19 @@ const CashOutModal = ({ isOpen, onClose }) => {
                     if (response.data.success) {
                         Swal.fire({
                             title: "Success!",
-                            text: `Successfully cashed out ${amount}TK`,
+                            text: `Successfully Cashed Out ${amount} Taka to ${receiver}`,
                             icon: "success"
                         });
                         onClose();
                     } else {
                         Swal.fire({
                             title: "Error!",
-                            text: 'Failed to cash out',
+                            text: response.data.message || 'Failed to Cash Out',
                             icon: "error"
                         });
                     }
                 } catch (error) {
-                    if (error.response) {
+                    if (error.response && error.response.data && error.response.data.message) {
                         Swal.fire({
                             title: "Error!",
                             text: error.response.data.message,
@@ -64,7 +65,7 @@ const CashOutModal = ({ isOpen, onClose }) => {
                     } else {
                         Swal.fire({
                             title: "Error!",
-                            text: "Something went wrong",
+                            text: 'Failed to Cash Out',
                             icon: "error"
                         });
                     }
@@ -81,6 +82,13 @@ const CashOutModal = ({ isOpen, onClose }) => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
                 <h2 className="text-2xl font-bold mb-4 text-primary">Cash Out</h2>
+                <input
+                    type="text"
+                    className="input text-primary input-bordered w-full my-2 border-primary focus:border-primary focus:outline-primary"
+                    placeholder="Agent's Number"
+                    value={receiver}
+                    onChange={(e) => setReceiver(e.target.value)}
+                />
                 <input
                     type="number"
                     className="input text-primary input-bordered w-full my-2 border-primary focus:border-primary focus:outline-primary"
