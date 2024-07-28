@@ -86,7 +86,7 @@ const Dashboard = () => {
                         <div className="flex justify-between my-4">
                             <div>
                                 <h3 className="text-sm inline-flex gap-2 justify-center items-center"><FaWallet />Your Wallet Balance</h3>
-                                <h2 className="text-3xl font-bold">{user.balance}.00 TK</h2>
+                                <h2 className="text-3xl font-bold">{user.balance} TK</h2>
                             </div>
                             <div className="flex justify-center items-center border-white border-2 p-2 rounded-lg">
                                 <QRCode fgColor='white' bgColor="transparent" value={`${user.phone}`} size={50} />
